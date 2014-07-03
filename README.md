@@ -3,6 +3,8 @@
 
 Expands CSS `@import` statements containing globs with the full paths. Useful with pre-processors like Sass.
 
+Heavily inspired by [`sass-globbing`](https://github.com/chriseppstein/sass-globbing)
+
 ## Install
 
 Install `gulp-css-globbing` as a development dependency using npm:
