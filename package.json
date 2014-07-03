@@ -1,0 +1,35 @@
+{
+  "name": "gulp-css-globbing",
+  "version": "0.1.0",
+  "description": "A Gulp plugin for globbing CSS @import statements",
+  "author": "Johan Sahlén <johan@monospace.se>",
+  "repository": "git://github.com/jsahlen/gulp-sass-globbing.git",
+  "bugs": "https://github.com/jsahlen/gulp-sass-globbing/issues",
+  "license": {
+    "type": "MIT",
+    "url": "http://github.com/jsahlen/gulp-css-globbing/raw/master/LICENSE"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "glob": "^4.0.3",
+    "gulp-util": "^2.2.19",
+    "vinyl-map": "^1.0.1"
+  },
+  "devDependencies": {
+    "event-stream": "^3.1.5",
+    "mocha": "^1.20.1",
+    "should": "^4.0.4",
+    "vinyl": "^0.2.3"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha"
+  },
+  "keywords": [
+    "gulpplugin",
+    "css",
+    "glob"
+  ],
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}

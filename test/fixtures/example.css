@@ -1,0 +1,12 @@
+/** non-glob import **/
+@import url('non-glob.css');
+/** single quotes **/
+@import url('single-quotes/**/*.css');
+/** double quotes **/
+@import url("double-quotes/**/*.css");
+/** without quotes **/
+@import url(without-quotes/**/*.css);
+/** unsupported file type **/
+@import url('misc/**/*.txt');
+/** non-existent files **/
+@import url('non-existent/**/*.css');
