@@ -1,4 +1,4 @@
-# gulp-css-globbing
+# gulp-css-globbing [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 > A Gulp plugin for globbing CSS `@import` statements
 
 Expands CSS `@import` statements containing globs with the full paths. Useful with pre-processors like Sass.
@@ -67,3 +67,9 @@ Type: `String` or `Array`
 The file extensions to treat as valid imported files. If files are found that match the glob, but its extensions don't match this option, they will not be added to the resulting file.
 
 Default: `['.css']`
+
+
+[travis-url]: https://travis-ci.org/jsahlen/gulp-css-globbing
+[travis-image]: https://travis-ci.org/jsahlen/gulp-css-globbing.svg?branch=master
+[depstat-url]: https://david-dm.org/jsahlen/gulp-css-globbing
+[depstat-image]: https://david-dm.org/jsahlen/gulp-css-globbing.svg
