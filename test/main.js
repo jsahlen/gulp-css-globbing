@@ -142,6 +142,34 @@ describe('gulp-css-globbing', function() {
         String(file.contents).should.containEql("/* No files to import found in non-existent/**/*.css */");
       });
     });
+
+    it('should import if only one file matches the glob', function() {
+      var file = createFile('example-one.scss');
+      var globber = globbingPlugin({ extensions: '.scss' });
+
+      globber.write(file);
+      globber.end();
+
+      globber.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.eql("@import 'scss-one/1.scss';\n");
+      });
+    });
+
+    it('should import all files in sequence', function() {
+      var file = createFile('example-sequence.scss');
+      var globber = globbingPlugin({ extensions: '.scss' });
+
+      globber.write(file);
+      globber.end();
+
+      globber.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.eql("@import 'scss-sequence/1.scss';\n@import 'scss-sequence/2.scss';\n@import 'scss-sequence/3.scss';\n@import 'scss-sequence/4.scss';\n@import 'scss-sequence/5.scss';\n");
+      });
+    });
   });
 
   describe('in streaming mode', function() {
