@@ -158,12 +158,12 @@ describe('gulp-css-globbing', function() {
         file.contents.pipe(es.wait(function(err, data) {
           should.not.exist(err);
 
-          data.should.containEql("@import url('single-quotes/1.css');");
-          data.should.containEql("@import url('single-quotes/2.css');");
-          data.should.containEql('@import url("double-quotes/1.css");');
-          data.should.containEql('@import url("double-quotes/2.css");');
-          data.should.containEql("@import url(without-quotes/1.css);");
-          data.should.containEql("@import url(without-quotes/2.css);");
+          String(data).should.containEql("@import url('single-quotes/1.css');");
+          String(data).should.containEql("@import url('single-quotes/2.css');");
+          String(data).should.containEql('@import url("double-quotes/1.css");');
+          String(data).should.containEql('@import url("double-quotes/2.css");');
+          String(data).should.containEql("@import url(without-quotes/1.css);");
+          String(data).should.containEql("@import url(without-quotes/2.css);");
         }));
       });
     });
