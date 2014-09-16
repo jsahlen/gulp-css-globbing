@@ -37,7 +37,7 @@ var cssGlobbingPlugin = function(options) {
 
       if (globRegExp.exec(filePattern)) {
         glob.sync(filePattern, { cwd: path.dirname(filename) }).forEach(function(foundFilename) {
-          if ((options.extensions.indexOf(path.extname(foundFilename)) !== -1)&&(options.ignoreFolders.indexOf(path.dirname(foundFilename)))) {
+          if ((options.extensions.indexOf(path.extname(foundFilename)) !== -1)&&(options.ignoreFolders.indexOf(path.dirname(foundFilename))) == -1) {
             files.push(foundFilename);
           }
         });
