@@ -57,7 +57,8 @@ Globbing is relative to the source file's path.
 gulp.task('css', function(){
   gulp.src(['src/styles.css'])
     .pipe(cssGlobbing({
-      extensions: ['.css', '.scss']
+      extensions: ['.css', '.scss'],
+      ignoreFolders: ['../styles']
     }))
     .pipe(gulp.dest('build/styles.css'));
 });
@@ -69,6 +70,13 @@ Type: `String` or `Array`
 The file extensions to treat as valid imported files. If files are found that match the glob, but its extensions don't match this option, they will not be added to the resulting file.
 
 Default: `['.css']`
+
+### ignoreFolders
+Type: `String` or `Array`
+
+Folders gulp-css-globbing should ignore. Each folder should be relative to the source file.
+
+Default: `['']`
 
 
 [travis-url]: https://travis-ci.org/jsahlen/gulp-css-globbing
