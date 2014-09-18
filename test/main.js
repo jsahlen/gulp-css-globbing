@@ -112,6 +112,31 @@ describe('gulp-css-globbing', function() {
       });
     });
 
+    it('should ignore specified folders', function(){
+      var file = createFile('example-ignore.scss');
+      var globberWithoutIgnoredFolders = globbingPlugin();
+
+      globberWithoutIgnoredFolders.write(file);
+      globberWithoutIgnoredFolders.end();
+
+      globberWithoutIgnoredFolders.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.containEql("@import 'ignore-me/1.css';");
+      });
+
+      var globberWithIgnoredFolders = globbingPlugin({ ignoreFolders: 'ignore-me' });
+
+      globberWithIgnoredFolders.write(file);
+      globberWithIgnoredFolders.end();
+
+      globberWithIgnoredFolders.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.not.containEql("@import 'ignore-me/1.css';");
+      });
+    });
+
     it('should replace a url-less @import in an scss file', function() {
       var file = createFile('example.scss');
       var globber = globbingPlugin({ extensions: '.scss' });

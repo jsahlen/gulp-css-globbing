@@ -12,11 +12,18 @@ var PLUGIN_NAME = 'gulp-css-globbing';
 var cssGlobbingPlugin = function(options) {
   if (!options) options = {};
   if (!options.extensions) options.extensions = ['.css'];
+  if (!options.ignoreFolders) options.ignoreFolders = [''];
 
   if (typeof options.extensions == 'string') options.extensions = [options.extensions];
 
   if (!(options.extensions instanceof Array)) {
     throw new gutil.PluginError(PLUGIN_NAME, 'extensions needs to be a string or an array');
+  }
+
+  if (typeof options.ignoreFolders == 'string') options.ignoreFolders = [options.ignoreFolders];
+
+  if (!(options.ignoreFolders instanceof Array)) {
+    throw new gutil.PluginError(PLUGIN_NAME, 'ignore-folders needs to be a string or an array');
   }
 
   return map(function(code, filename) {
@@ -30,7 +37,7 @@ var cssGlobbingPlugin = function(options) {
 
       if (globRegExp.exec(filePattern)) {
         glob.sync(filePattern, { cwd: path.dirname(filename) }).forEach(function(foundFilename) {
-          if (options.extensions.indexOf(path.extname(foundFilename)) !== -1) {
+          if ((options.extensions.indexOf(path.extname(foundFilename)) !== -1)&&(options.ignoreFolders.indexOf(path.dirname(foundFilename))) == -1) {
             files.push(foundFilename);
           }
         });
