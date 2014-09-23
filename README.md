@@ -96,6 +96,13 @@ Default: `{
         globBlockContents: '../**/*.scss'
       }`
 
+With the above settings, inside of your main .scss file you would only need to have this:
+```
+// cssGlobbingBegin
+// this line can be blank
+// cssGlobbingEnd
+```
+
 
 [travis-url]: https://travis-ci.org/jsahlen/gulp-css-globbing
 [travis-image]: https://travis-ci.org/jsahlen/gulp-css-globbing.svg?branch=master
