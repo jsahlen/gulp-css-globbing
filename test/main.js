@@ -137,6 +137,87 @@ describe('gulp-css-globbing', function() {
       });
     });
 
+    it('should not run auto-replace unless it is turned on ', function(){
+      var file = createFile('example-auto-replace.scss');
+      var globberWithoutAutoReplace = globbingPlugin();
+
+      globberWithoutAutoReplace.write(file);
+      globberWithoutAutoReplace.end();
+
+      globberWithoutAutoReplace.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.containEql("// on/off test text");
+      });
+
+    });
+
+    it('should be able to find the auto-replace block in the specified file', function(){
+      var file = createFile('example-auto-replace.scss');
+      var globberWithAutoReplace = globbingPlugin({autoReplaceBlock:true});
+
+      globberWithAutoReplace.write(file);
+      globberWithAutoReplace.end();
+
+      globberWithAutoReplace.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.containEql("// cssGlobbingBegin");
+        String(file.contents).should.containEql("// cssGlobbingEnd");
+      });
+
+    });
+
+    it('should be able to replace the auto-replace block in the specified file', function(){
+      var file = createFile('example-auto-replace.scss');
+      var options = {}
+
+      options.autoReplaceBlock = {
+          onOff:true, 
+          globBlockContents: '**/*.scss'
+      };
+      options.extensions = ['.scss','.css'];
+      var globberReplaceAutoReplace = globbingPlugin(options);
+
+      globberReplaceAutoReplace.write(file);
+      globberReplaceAutoReplace.end();
+
+      globberReplaceAutoReplace.once('data', function(file) {
+        file.isBuffer().should.be.true;
+        //NATH: you are here, the test is no worky. can't get correct url parameters into test
+        String(file.contents).should.not.containEql("// on/off test text");
+        String(file.contents).should.not.containEql("../**/*.scss");
+        String(file.contents).should.containEql("@import 'example.scss';")
+      });
+
+    });
+
+    it('should be able to use different parameters', function(){
+      var file = createFile('example-auto-replace.scss');
+      var options = {}
+      
+      options.autoReplaceBlock = {
+          onOff:true, 
+          globBlockContents: 'scss-sequence/*.scss',
+          globBlockBegin: 'cssGlobbingBeginTest',
+          globBlockEnd: 'cssGlobbingEndTest'
+      };
+      options.extensions = ['.scss','.css'];
+      var globberReplaceAutoReplace = globbingPlugin(options);
+
+      globberReplaceAutoReplace.write(file);
+      globberReplaceAutoReplace.end();
+
+      globberReplaceAutoReplace.once('data', function(file) {
+        file.isBuffer().should.be.true;
+        //NATH: you are here, the test is no worky. can't get correct url parameters into test
+        String(file.contents).should.not.containEql("// parameters-test");
+        String(file.contents).should.not.containEql("../**/*.scss");
+        String(file.contents).should.containEql("@import 'scss-sequence/1.scss';")
+      });
+
+    });
+
     it('should replace a url-less @import in an scss file', function() {
       var file = createFile('example.scss');
       var globber = globbingPlugin({ extensions: '.scss' });
