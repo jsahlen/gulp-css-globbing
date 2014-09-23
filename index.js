@@ -14,6 +14,15 @@ var cssGlobbingPlugin = function(options) {
   if (!options.extensions) options.extensions = ['.css'];
   if (!options.ignoreFolders) options.ignoreFolders = [''];
 
+  var autoReplaceBlockDefaults = {
+    onOff: false,
+    globBlockBegin: 'cssGlobbingBegin',
+    globBlockEnd: 'cssGlobbingEnd',
+    globBlockContents: '../**/*.scss'
+  };
+  if (!options.autoReplaceBlock) options.autoReplaceBlock = autoReplaceBlockDefaults;
+
+
   if (typeof options.extensions == 'string') options.extensions = [options.extensions];
 
   if (!(options.extensions instanceof Array)) {
@@ -25,12 +34,38 @@ var cssGlobbingPlugin = function(options) {
   if (!(options.ignoreFolders instanceof Array)) {
     throw new gutil.PluginError(PLUGIN_NAME, 'ignore-folders needs to be a string or an array');
   }
+  if (options.autoReplaceBlock === true){
+    options.autoReplaceBlock = autoReplaceBlockDefaults;
+    options.autoReplaceBlock.onOff = true
+  }
+
+  if (!(options.autoReplaceBlock instanceof Object)) {
+    throw new gutil.PluginError(PLUGIN_NAME, 'auto-replace block needs to be an object');
+  }else{
+    if(!options.autoReplaceBlock.globBlockBegin) options.autoReplaceBlock.globBlockBegin = autoReplaceBlockDefaults.globBlockBegin;
+    if(!options.autoReplaceBlock.globBlockEnd) options.autoReplaceBlock.globBlockEnd = autoReplaceBlockDefaults.globBlockEnd;
+    if(!options.autoReplaceBlock.globBlockContents) options.autoReplaceBlock.globBlockContents = autoReplaceBlockDefaults.globBlockContents;
+  }
 
   return map(function(code, filename) {
+
     var content = code.toString();
     var importRegExp = /^\s*@import\s+((?:url\()?["']?)?([^"'\)]+)(['"]?(?:\))?)?;\s*$/gm;
     var globRegExp = /\/\*/;
     var files;
+
+    if(options.autoReplaceBlock.onOff){
+      var regexstring = '\/\/ '+options.autoReplaceBlock.globBlockBegin+'[\\s\\S]*?'+options.autoReplaceBlock.globBlockEnd;
+      var regexp = new RegExp(regexstring,'gm');
+
+      content = content.replace(regexp, function(result, prefix, filePattern, suffix) {
+        result = '// '+options.autoReplaceBlock.globBlockBegin+'\n';
+        result += '@import \''+options.autoReplaceBlock.globBlockContents+'\';\n';
+        result += '// '+options.autoReplaceBlock.globBlockEnd
+        return result;
+      });
+
+    }
 
     content = content.replace(importRegExp, function(result, prefix, filePattern, suffix) {
       files = [];
