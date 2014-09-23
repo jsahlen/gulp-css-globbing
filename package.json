@@ -3,6 +3,12 @@
   "version": "0.1.4",
   "description": "A Gulp plugin for globbing CSS @import statements",
   "author": "Johan Sahlén <johan@monospace.se>",
+  "contributors": [
+    {
+      "name": "Scott Nath",
+      "url": "https://github.com/scottnath"
+    }
+  ],
   "repository": "git://github.com/jsahlen/gulp-css-globbing.git",
   "bugs": "https://github.com/jsahlen/gulp-css-globbing/issues",
   "license": {
