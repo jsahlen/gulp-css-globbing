@@ -58,7 +58,13 @@ gulp.task('css', function(){
   gulp.src(['src/styles.css'])
     .pipe(cssGlobbing({
       extensions: ['.css', '.scss'],
-      ignoreFolders: ['../styles']
+      ignoreFolders: ['../styles'],
+      autoReplaceBlock: {
+        onOff: false,
+        globBlockBegin: 'cssGlobbingBegin',
+        globBlockEnd: 'cssGlobbingEnd',
+        globBlockContents: '../**/*.scss'
+      }
     }))
     .pipe(gulp.dest('build/styles.css'));
 });
@@ -77,6 +83,18 @@ Type: `String` or `Array`
 Folders gulp-css-globbing should ignore. Each folder should be relative to the source file.
 
 Default: `['']`
+
+### autoReplaceBlock
+Type: `String` or `Object`
+
+Search for a block of text which is replaced with the path to the files we want to glob. Path can be re-replaced each time we call gulp-css-globbing.
+
+Default: `{
+        onOff: false,
+        globBlockBegin: 'cssGlobbingBegin',
+        globBlockEnd: 'cssGlobbingEnd',
+        globBlockContents: '../**/*.scss'
+      }`
 
 
 [travis-url]: https://travis-ci.org/jsahlen/gulp-css-globbing
