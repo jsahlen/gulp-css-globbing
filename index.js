@@ -84,7 +84,7 @@ var cssGlobbingPlugin = function(options) {
             result += '@import ' + prefix + foundFilename + suffix + ';\n';
           });
         } else {
-          result = '/* No files to import found in ' + filePattern + ' */';
+          result = '/* No files to import found in ' + filePattern.replace(/\//g,'\//') + ' */';
         }
       }
 
