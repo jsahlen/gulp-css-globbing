@@ -245,7 +245,7 @@ describe('gulp-css-globbing', function() {
       globber.once('data', function(file) {
         file.isBuffer().should.be.true;
 
-        String(file.contents).should.containEql("/* No files to import found in non-existent/**/*.css */");
+        String(file.contents).should.containEql("/* No files to import found in ..//**//*.scss */");
       });
     });
 
