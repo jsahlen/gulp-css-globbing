@@ -276,6 +276,20 @@ describe('gulp-css-globbing', function() {
         String(file.contents).should.eql("@import 'scss-sequence/1.scss';\n@import 'scss-sequence/2.scss';\n@import 'scss-sequence/3.scss';\n@import 'scss-sequence/4.scss';\n@import 'scss-sequence/5.scss';\n");
       });
     });
+
+    it('should support sass syntax', function() {
+      var file = createFile('example.sass');
+      var globber = globbingPlugin({ extensions: '.sass' });
+
+      globber.write(file);
+      globber.end();
+
+      globber.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.eql("@import \"sass/1.sass\"\n");
+      });
+    });
   });
 
   describe('in streaming mode', function() {
