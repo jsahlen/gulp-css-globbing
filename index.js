@@ -50,7 +50,8 @@ var cssGlobbingPlugin = function(options) {
   return map(function(code, filename) {
 
     var content = code.toString();
-    var importRegExp = /^\s*@import\s+((?:url\()?["']?)?([^"'\)]+)(['"]?(?:\))?)?;\s*$/gm;
+    var semicolon = filename.indexOf('.sass') !== -1 ? '' : ';';
+    var importRegExp = /^\s*@import\s+((?:url\()?["']?)?([^"'\)]+)(['"]?(?:\))?)?;?\s*$/gm;
     var globRegExp = /\/\*/;
     var files;
 
@@ -60,7 +61,7 @@ var cssGlobbingPlugin = function(options) {
 
       content = content.replace(regexp, function(result, prefix, filePattern, suffix) {
         result = '// '+options.autoReplaceBlock.globBlockBegin+'\n';
-        result += '@import \''+options.autoReplaceBlock.globBlockContents+'\';\n';
+        result += '@import \''+options.autoReplaceBlock.globBlockContents+'\'' + semicolon + '\n';
         result += '// '+options.autoReplaceBlock.globBlockEnd
         return result;
       });
@@ -81,7 +82,7 @@ var cssGlobbingPlugin = function(options) {
           result = '';
 
           files.forEach(function(foundFilename) {
-            result += '@import ' + prefix + foundFilename + suffix + ';\n';
+            result += '@import ' + prefix + foundFilename + suffix + semicolon + '\n';
           });
         } else {
           result = '/* No files to import found in ' + filePattern.replace(/\//g,'\//') + ' */';
