@@ -50,7 +50,7 @@ var cssGlobbingPlugin = function(options) {
   return map(function(code, filename) {
 
     var content = code.toString();
-    var semicolon = filename.indexOf('.sass') !== -1 ? '' : ';';
+    var semicolon = path.extname(filename).indexOf('.sass') !== -1 ? '' : ';';
     var importRegExp = /^\s*@import\s+((?:url\()?["']?)?([^"'\)]+)(['"]?(?:\))?)?;?\s*$/gm;
     var globRegExp = /\/\*/;
     var files;
