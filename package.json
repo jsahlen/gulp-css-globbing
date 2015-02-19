@@ -7,6 +7,10 @@
     {
       "name": "Scott Nath",
       "url": "https://github.com/scottnath"
+    },
+    {
+      "name": "Thomas Creeten",
+      "url": "https://github.com/CREEATION"
     }
   ],
   "repository": "git://github.com/jsahlen/gulp-css-globbing.git",
