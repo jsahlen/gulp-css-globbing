@@ -348,6 +348,20 @@ describe('gulp-css-globbing', function() {
         String(file.contents).should.eql("@import 'scss-one/1.scss';\n");
       });
     });
+    
+    it('should support sass syntax', function() {
+      var file = createFile('example.sass');
+      var globber = globbingPlugin({ extensions: '.sass' });
+
+      globber.write(file);
+      globber.end();
+
+      globber.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.eql("@import \"sass/1.sass\"\n");
+      });
+    });    
 
     it('should import all files in sequence', function() {
       var file = createFile('example-sequence.scss');
