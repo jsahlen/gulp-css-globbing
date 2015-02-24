@@ -20,8 +20,15 @@ var cssGlobbingPlugin = function(options) {
     globBlockEnd: 'cssGlobbingEnd',
     globBlockContents: '../**/*.scss'
   };
+
+  var scssImportPathDefaults = {
+    leading_underscore: true,
+    filename_extension: true
+  };
+
   if (!options.autoReplaceBlock) options.autoReplaceBlock = autoReplaceBlockDefaults;
 
+  if (!options.scssImportPath) options.scssImportPath = scssImportPathDefaults;
 
   if (typeof options.extensions == 'string') options.extensions = [options.extensions];
 
@@ -47,11 +54,17 @@ var cssGlobbingPlugin = function(options) {
     if(!options.autoReplaceBlock.globBlockContents) options.autoReplaceBlock.globBlockContents = autoReplaceBlockDefaults.globBlockContents;
   }
 
+  if (!(options.scssImportPath instanceof Object)) {
+    throw new gutil.PluginError(PLUGIN_NAME, 'scss import path needs to be an object');
+  }else{
+    if(typeof options.scssImportPath.leading_underscore === 'undefined') options.scssImportPath.leading_underscore = scssImportPathDefaults.leading_underscore;
+    if(typeof options.scssImportPath.filename_extension === 'undefined') options.scssImportPath.filename_extension = scssImportPathDefaults.filename_extension;
+  }
+
   return map(function(code, filename) {
 
     var content = code.toString();
-    var semicolon = path.extname(filename).indexOf('.sass') !== -1 ? '' : ';';
-    var importRegExp = /^\s*@import\s+((?:url\()?["']?)?([^"'\)]+)(['"]?(?:\))?)?;?\s*$/gm;
+    var importRegExp = /^\s*@import\s+((?:url\()?["']?)?([^"'\)]+)(['"]?(?:\))?)?;\s*$/gm;
     var globRegExp = /\/\*/;
     var files;
 
@@ -61,7 +74,7 @@ var cssGlobbingPlugin = function(options) {
 
       content = content.replace(regexp, function(result, prefix, filePattern, suffix) {
         result = '// '+options.autoReplaceBlock.globBlockBegin+'\n';
-        result += '@import \''+options.autoReplaceBlock.globBlockContents+'\'' + semicolon + '\n';
+        result += '@import \''+options.autoReplaceBlock.globBlockContents+'\';\n';
         result += '// '+options.autoReplaceBlock.globBlockEnd
         return result;
       });
@@ -72,17 +85,31 @@ var cssGlobbingPlugin = function(options) {
       files = [];
 
       if (globRegExp.exec(filePattern)) {
-        glob.sync(filePattern, { cwd: path.dirname(filename) }).forEach(function(foundFilename) {
-          if ((options.extensions.indexOf(path.extname(foundFilename)) !== -1)&&(options.ignoreFolders.indexOf(path.dirname(foundFilename))) == -1) {
-            files.push(foundFilename);
+        glob.sync(filePattern, { cwd: path.dirname(filename) }).forEach(function(foundFilePath) {
+          if ((options.extensions.indexOf(path.extname(foundFilePath)) !== -1)&&(options.ignoreFolders.indexOf(path.dirname(foundFilePath))) == -1) {
+
+            var foundFilename = foundFilePath.split('\\').pop().split('/').pop();
+            var origFoundFilename = foundFilename;
+
+            if (!options.scssImportPath.filename_extension) {
+              foundFilename = foundFilename.replace(/.[^.]+$/,'');
+            }
+
+            if (!options.scssImportPath.leading_underscore) {
+              foundFilename = foundFilename.replace(/^_/,'');
+            }
+
+            foundFilePath = foundFilePath.replace(origFoundFilename,foundFilename);
+
+            files.push(foundFilePath);
           }
         });
 
         if (files.length) {
           result = '';
 
-          files.forEach(function(foundFilename) {
-            result += '@import ' + prefix + foundFilename + suffix + semicolon + '\n';
+          files.forEach(function(foundFilePath) {
+            result += '@import ' + prefix + foundFilePath + suffix + ';\n';
           });
         } else {
           result = '/* No files to import found in ' + filePattern.replace(/\//g,'\//') + ' */';

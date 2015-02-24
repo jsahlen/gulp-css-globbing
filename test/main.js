@@ -137,6 +137,92 @@ describe('gulp-css-globbing', function() {
       });
     });
 
+    it('should not remove file extensions or prefix-underscores by default', function() {
+      var file = createFile('example-import-path.scss');
+      var options = {};
+      options.extensions = ['.scss'];
+      var globber = globbingPlugin(options);
+
+      globber.write(file);
+      globber.end();
+
+      globber.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.containEql("@import url('scss-import-path/_example.scss');");
+        String(file.contents).should.containEql("@import url('scss-import-path/_example_2.scss');");
+        String(file.contents).should.containEql("@import url('scss-import-path/__example_3.test.scss');");
+        String(file.contents).should.containEql("@import url('scss-import-path/example_4_.test.css.scss');");
+      });
+    });
+
+    it('should remove file extensions', function() {
+      var file = createFile('example-import-path.scss');
+      var options = {};
+      options.scssImportPath = {
+        filename_extension: false
+      };
+      options.extensions = ['.scss'];
+      var globber = globbingPlugin(options);
+
+      globber.write(file);
+      globber.end();
+
+      globber.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.containEql("@import url('scss-import-path/_example');");
+        String(file.contents).should.containEql("@import url('scss-import-path/_example_2');");
+        String(file.contents).should.containEql("@import url('scss-import-path/__example_3.test');");
+        String(file.contents).should.containEql("@import url('scss-import-path/example_4_.test.css');");
+      });
+    });
+
+    it('should remove prefix-underscores', function() {
+      var file = createFile('example-import-path.scss');
+      var options = {};
+      options.scssImportPath = {
+        leading_underscore: false
+      };
+      options.extensions = ['.scss'];
+      var globber = globbingPlugin(options);
+
+      globber.write(file);
+      globber.end();
+
+      globber.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.containEql("@import url('scss-import-path/example.scss');");
+        String(file.contents).should.containEql("@import url('scss-import-path/example_2.scss');");
+        String(file.contents).should.containEql("@import url('scss-import-path/_example_3.test.scss');");
+        String(file.contents).should.containEql("@import url('scss-import-path/example_4_.test.css.scss');");
+      });
+    });
+
+    it('should remove prefix-underscores and remove file extensions', function() {
+      var file = createFile('example-import-path.scss');
+      var options = {};
+      options.scssImportPath = {
+        leading_underscore: false,
+        filename_extension: false
+      };
+      options.extensions = ['.scss'];
+      var globber = globbingPlugin(options);
+
+      globber.write(file);
+      globber.end();
+
+      globber.once('data', function(file) {
+        file.isBuffer().should.be.true;
+
+        String(file.contents).should.containEql("@import url('scss-import-path/example');");
+        String(file.contents).should.containEql("@import url('scss-import-path/example_2');");
+        String(file.contents).should.containEql("@import url('scss-import-path/_example_3.test');");
+        String(file.contents).should.containEql("@import url('scss-import-path/example_4_.test.css');");
+      });
+    });
+
     it('should not run auto-replace unless it is turned on ', function(){
       var file = createFile('example-auto-replace.scss');
       var globberWithoutAutoReplace = globbingPlugin();
@@ -173,7 +259,7 @@ describe('gulp-css-globbing', function() {
       var options = {}
 
       options.autoReplaceBlock = {
-          onOff:true, 
+          onOff:true,
           globBlockContents: '**/*.scss'
       };
       options.extensions = ['.scss','.css'];
@@ -195,9 +281,9 @@ describe('gulp-css-globbing', function() {
     it('should be able to use different parameters', function(){
       var file = createFile('example-auto-replace.scss');
       var options = {}
-      
+
       options.autoReplaceBlock = {
-          onOff:true, 
+          onOff:true,
           globBlockContents: 'scss-sequence/*.scss',
           globBlockBegin: 'cssGlobbingBeginTest',
           globBlockEnd: 'cssGlobbingEndTest'
@@ -274,20 +360,6 @@ describe('gulp-css-globbing', function() {
         file.isBuffer().should.be.true;
 
         String(file.contents).should.eql("@import 'scss-sequence/1.scss';\n@import 'scss-sequence/2.scss';\n@import 'scss-sequence/3.scss';\n@import 'scss-sequence/4.scss';\n@import 'scss-sequence/5.scss';\n");
-      });
-    });
-
-    it('should support sass syntax', function() {
-      var file = createFile('example.sass');
-      var globber = globbingPlugin({ extensions: '.sass' });
-
-      globber.write(file);
-      globber.end();
-
-      globber.once('data', function(file) {
-        file.isBuffer().should.be.true;
-
-        String(file.contents).should.eql("@import \"sass/1.sass\"\n");
       });
     });
   });
