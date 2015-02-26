@@ -48,17 +48,17 @@ var cssGlobbingPlugin = function(options) {
 
   if (!(options.autoReplaceBlock instanceof Object)) {
     throw new gutil.PluginError(PLUGIN_NAME, 'auto-replace block needs to be an object');
-  }else{
-    if(!options.autoReplaceBlock.globBlockBegin) options.autoReplaceBlock.globBlockBegin = autoReplaceBlockDefaults.globBlockBegin;
-    if(!options.autoReplaceBlock.globBlockEnd) options.autoReplaceBlock.globBlockEnd = autoReplaceBlockDefaults.globBlockEnd;
-    if(!options.autoReplaceBlock.globBlockContents) options.autoReplaceBlock.globBlockContents = autoReplaceBlockDefaults.globBlockContents;
+  } else {
+    if (!options.autoReplaceBlock.globBlockBegin) options.autoReplaceBlock.globBlockBegin = autoReplaceBlockDefaults.globBlockBegin;
+    if (!options.autoReplaceBlock.globBlockEnd) options.autoReplaceBlock.globBlockEnd = autoReplaceBlockDefaults.globBlockEnd;
+    if (!options.autoReplaceBlock.globBlockContents) options.autoReplaceBlock.globBlockContents = autoReplaceBlockDefaults.globBlockContents;
   }
 
   if (!(options.scssImportPath instanceof Object)) {
     throw new gutil.PluginError(PLUGIN_NAME, 'scss import path needs to be an object');
-  }else{
-    if(typeof options.scssImportPath.leading_underscore === 'undefined') options.scssImportPath.leading_underscore = scssImportPathDefaults.leading_underscore;
-    if(typeof options.scssImportPath.filename_extension === 'undefined') options.scssImportPath.filename_extension = scssImportPathDefaults.filename_extension;
+  } else {
+    if (typeof options.scssImportPath.leading_underscore === 'undefined') options.scssImportPath.leading_underscore = scssImportPathDefaults.leading_underscore;
+    if (typeof options.scssImportPath.filename_extension === 'undefined') options.scssImportPath.filename_extension = scssImportPathDefaults.filename_extension;
   }
 
   return map(function(code, filename) {
@@ -69,7 +69,7 @@ var cssGlobbingPlugin = function(options) {
     var globRegExp = /\/\*/;
     var files;
 
-    if(options.autoReplaceBlock.onOff){
+    if (options.autoReplaceBlock.onOff){
       var regexstring = '\/\/ '+options.autoReplaceBlock.globBlockBegin+'[\\s\\S]*?'+options.autoReplaceBlock.globBlockEnd;
       var regexp = new RegExp(regexstring,'gm');
 
