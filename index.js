@@ -89,18 +89,18 @@ var cssGlobbingPlugin = function(options) {
         glob.sync(filePattern, { cwd: path.dirname(filename) }).forEach(function(foundFilePath) {
           if ((options.extensions.indexOf(path.extname(foundFilePath)) !== -1)&&(options.ignoreFolders.indexOf(path.dirname(foundFilePath))) == -1) {
 
-            var foundFilename = foundFilePath.split('\\').pop().split('/').pop();
-            var origFoundFilename = foundFilename;
+            var foundFilename = path.basename(foundFilePath);
+            var foundFileDirname = path.dirname(foundFilePath);
 
             if (!options.scssImportPath.filename_extension) {
-              foundFilename = foundFilename.replace(/.[^.]+$/,'');
+              foundFilename = path.basename(foundFilename,path.extname(foundFilename));
             }
 
             if (!options.scssImportPath.leading_underscore) {
               foundFilename = foundFilename.replace(/^_/,'');
             }
 
-            foundFilePath = foundFilePath.replace(origFoundFilename,foundFilename);
+            foundFilePath = path.join(foundFileDirname,foundFilename);
 
             files.push(foundFilePath);
           }
