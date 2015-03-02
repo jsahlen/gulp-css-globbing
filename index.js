@@ -20,8 +20,15 @@ var cssGlobbingPlugin = function(options) {
     globBlockEnd: 'cssGlobbingEnd',
     globBlockContents: '../**/*.scss'
   };
+
+  var scssImportPathDefaults = {
+    leading_underscore: true,
+    filename_extension: true
+  };
+
   if (!options.autoReplaceBlock) options.autoReplaceBlock = autoReplaceBlockDefaults;
 
+  if (!options.scssImportPath) options.scssImportPath = scssImportPathDefaults;
 
   if (typeof options.extensions == 'string') options.extensions = [options.extensions];
 
@@ -41,10 +48,17 @@ var cssGlobbingPlugin = function(options) {
 
   if (!(options.autoReplaceBlock instanceof Object)) {
     throw new gutil.PluginError(PLUGIN_NAME, 'auto-replace block needs to be an object');
-  }else{
-    if(!options.autoReplaceBlock.globBlockBegin) options.autoReplaceBlock.globBlockBegin = autoReplaceBlockDefaults.globBlockBegin;
-    if(!options.autoReplaceBlock.globBlockEnd) options.autoReplaceBlock.globBlockEnd = autoReplaceBlockDefaults.globBlockEnd;
-    if(!options.autoReplaceBlock.globBlockContents) options.autoReplaceBlock.globBlockContents = autoReplaceBlockDefaults.globBlockContents;
+  } else {
+    if (!options.autoReplaceBlock.globBlockBegin) options.autoReplaceBlock.globBlockBegin = autoReplaceBlockDefaults.globBlockBegin;
+    if (!options.autoReplaceBlock.globBlockEnd) options.autoReplaceBlock.globBlockEnd = autoReplaceBlockDefaults.globBlockEnd;
+    if (!options.autoReplaceBlock.globBlockContents) options.autoReplaceBlock.globBlockContents = autoReplaceBlockDefaults.globBlockContents;
+  }
+
+  if (!(options.scssImportPath instanceof Object)) {
+    throw new gutil.PluginError(PLUGIN_NAME, 'scss import path needs to be an object');
+  } else {
+    if (typeof options.scssImportPath.leading_underscore === 'undefined') options.scssImportPath.leading_underscore = scssImportPathDefaults.leading_underscore;
+    if (typeof options.scssImportPath.filename_extension === 'undefined') options.scssImportPath.filename_extension = scssImportPathDefaults.filename_extension;
   }
 
   return map(function(code, filename) {
@@ -55,7 +69,7 @@ var cssGlobbingPlugin = function(options) {
     var globRegExp = /\/\*/;
     var files;
 
-    if(options.autoReplaceBlock.onOff){
+    if (options.autoReplaceBlock.onOff){
       var regexstring = '\/\/ '+options.autoReplaceBlock.globBlockBegin+'[\\s\\S]*?'+options.autoReplaceBlock.globBlockEnd;
       var regexp = new RegExp(regexstring,'gm');
 
@@ -72,17 +86,31 @@ var cssGlobbingPlugin = function(options) {
       files = [];
 
       if (globRegExp.exec(filePattern)) {
-        glob.sync(filePattern, { cwd: path.dirname(filename) }).forEach(function(foundFilename) {
-          if ((options.extensions.indexOf(path.extname(foundFilename)) !== -1)&&(options.ignoreFolders.indexOf(path.dirname(foundFilename))) == -1) {
-            files.push(foundFilename);
+        glob.sync(filePattern, { cwd: path.dirname(filename) }).forEach(function(foundFilePath) {
+          if ((options.extensions.indexOf(path.extname(foundFilePath)) !== -1)&&(options.ignoreFolders.indexOf(path.dirname(foundFilePath))) == -1) {
+
+            var foundFilename = path.basename(foundFilePath);
+            var foundFileDirname = path.dirname(foundFilePath);
+
+            if (!options.scssImportPath.filename_extension) {
+              foundFilename = path.basename(foundFilename,path.extname(foundFilename));
+            }
+
+            if (!options.scssImportPath.leading_underscore) {
+              foundFilename = foundFilename.replace(/^_/,'');
+            }
+
+            foundFilePath = path.join(foundFileDirname,foundFilename);
+
+            files.push(foundFilePath);
           }
         });
 
         if (files.length) {
           result = '';
 
-          files.forEach(function(foundFilename) {
-            result += '@import ' + prefix + foundFilename + suffix + semicolon + '\n';
+          files.forEach(function(foundFilePath) {
+            result += '@import ' + prefix + foundFilePath + suffix + semicolon + '\n';
           });
         } else {
           result = '/* No files to import found in ' + filePattern.replace(/\//g,'\//') + ' */';

@@ -64,6 +64,10 @@ gulp.task('css', function(){
         globBlockBegin: 'cssGlobbingBegin',
         globBlockEnd: 'cssGlobbingEnd',
         globBlockContents: '../**/*.scss'
+      },
+      scssImportPath: {
+        leading_underscore: false,
+        filename_extension: false
       }
     }))
     .pipe(gulp.dest('build/styles.css'));
@@ -89,12 +93,15 @@ Type: `String` or `Object`
 
 Search for a block of text which is replaced with the path to the files we want to glob. Path can be re-replaced each time we call gulp-css-globbing.
 
-Default: `{
-        onOff: false,
-        globBlockBegin: 'cssGlobbingBegin',
-        globBlockEnd: 'cssGlobbingEnd',
-        globBlockContents: '../**/*.scss'
-      }`
+Default: 
+```
+{
+  onOff: false,
+  globBlockBegin: 'cssGlobbingBegin',
+  globBlockEnd: 'cssGlobbingEnd',
+  globBlockContents: '../**/*.scss'
+}
+```
 
 With the above settings, inside of your main .scss file you would only need to have this:
 ```
@@ -102,6 +109,28 @@ With the above settings, inside of your main .scss file you would only need to h
 // this line can be blank
 // cssGlobbingEnd
 ```
+
+### scssImportPath
+Type: `Object`
+
+Allows for [default scss rules for writing scss import paths](https://github.com/causes/scss-lint/blob/master/lib/scss_lint/linter/README.md#importpath). Changes off by default.
+
+Default:
+```
+{
+  leading_underscore: false,
+  filename_extension: false
+}
+```
+
+#### Leading Underscore
+
+If `leading_underscore` is set to `true`, then the *first* leading underscore of a file name will be removed. Example: `.../main/_main.scss` becomes `@import '../main/main.scss';`
+
+#### Filename Extension
+
+If `filename_extension` is set to `true`, then the the extension of a file name will be removed. Example: `.../main/_main.scss` becomes `@import '../main/_main';`
+
 
 
 [travis-url]: https://travis-ci.org/jsahlen/gulp-css-globbing
