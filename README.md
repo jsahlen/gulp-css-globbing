@@ -113,23 +113,23 @@ With the above settings, inside of your main .scss file you would only need to h
 ### scssImportPath
 Type: `Object`
 
-Allows for [default scss rules for writing scss import paths](https://github.com/causes/scss-lint/blob/master/lib/scss_lint/linter/README.md#importpath). Changes off by default.
+Allows for [default scss rules for writing scss import paths](https://github.com/causes/scss-lint/blob/master/lib/scss_lint/linter/README.md#importpath).
 
 Default:
 ```
 {
-  leading_underscore: false,
-  filename_extension: false
+  leading_underscore: true, // underscores will NOT be removed
+  filename_extension: true // extensions will NOT be removed
 }
 ```
 
 #### Leading Underscore
 
-If `leading_underscore` is set to `true`, then the *first* leading underscore of a file name will be removed. Example: `.../main/_main.scss` becomes `@import '../main/main.scss';`
+If `leading_underscore` is set to `false`, then the *first* leading underscore of a file name will be removed. Example: `.../main/_main.scss` becomes `@import '../main/main.scss';`
 
 #### Filename Extension
 
-If `filename_extension` is set to `true`, then the the extension of a file name will be removed. Example: `.../main/_main.scss` becomes `@import '../main/_main';`
+If `filename_extension` is set to `false`, then the the extension of a file name will be removed. Example: `.../main/_main.scss` becomes `@import '../main/_main';`
 
 
 
