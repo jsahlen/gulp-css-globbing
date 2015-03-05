@@ -2,7 +2,7 @@
 
 var gutil = require('gulp-util');
 var glob = require('glob');
-var map = require('vinyl-map');
+var map = require('./lib/vinyl-map');
 
 var path = require('path');
 
