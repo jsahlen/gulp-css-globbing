@@ -100,7 +100,7 @@ var cssGlobbingPlugin = function(options) {
               foundFilename = foundFilename.replace(/^_/,'');
             }
 
-            foundFilePath = path.join(foundFileDirname,foundFilename);
+            foundFilePath = path.join(foundFileDirname,foundFilename).replace(new RegExp('\\' + path.sep, 'g'), '/');
 
             files.push(foundFilePath);
           }
