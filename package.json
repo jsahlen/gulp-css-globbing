@@ -1,6 +1,6 @@
 {
   "name": "gulp-css-globbing",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A Gulp plugin for globbing CSS @import statements",
   "author": "Johan Sahlén <johan@monospace.se>",
   "contributors": [
