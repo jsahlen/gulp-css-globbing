@@ -5,6 +5,8 @@ Expands CSS `@import` statements containing globs with the full paths. Useful wi
 
 Heavily inspired by [`sass-globbing`](https://github.com/chriseppstein/sass-globbing)
 
+**DEPRECATION NOTICE:** This library is no longer actively supported, as I currently have no need for it myself, and am having a difficult time finding the time/motivation to work on it.
+
 ## Install
 
 Install `gulp-css-globbing` as a development dependency using npm:
