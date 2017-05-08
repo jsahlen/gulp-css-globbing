@@ -21,9 +21,11 @@
   },
   "main": "index.js",
   "dependencies": {
+    "bl": "^0.9.4",
     "glob": "^4.0.5",
     "gulp-util": "^3.0.0",
-    "vinyl-map": "^1.0.1"
+    "new-from": "0.0.3",
+    "through2": "^0.6.3"
   },
   "devDependencies": {
     "event-stream": "^3.1.7",
